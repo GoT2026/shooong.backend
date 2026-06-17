@@ -1,6 +1,6 @@
 package io.rapa.shooongbackend.waypoint.entity;
 
-import io.rapa.shooongbackend.order.Orders;
+import io.rapa.shooongbackend.order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

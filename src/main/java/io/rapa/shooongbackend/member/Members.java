@@ -3,7 +3,7 @@ package io.rapa.shooongbackend.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.rapa.shooongbackend.common.entity.BaseEntity;
-import io.rapa.shooongbackend.order.Orders;
+import io.rapa.shooongbackend.order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

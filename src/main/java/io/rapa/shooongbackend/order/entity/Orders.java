@@ -1,4 +1,4 @@
-package io.rapa.shooongbackend.order;
+package io.rapa.shooongbackend.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.rapa.shooongbackend.common.entity.BaseEntity;

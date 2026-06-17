@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 HttpHeaders.AUTHORIZATION
         );
         if(bearerToken != null && bearerToken.startsWith("Bearer")){
-            return bearerToken;
+            return bearerToken.substring(7);
         }
         return null;
     }

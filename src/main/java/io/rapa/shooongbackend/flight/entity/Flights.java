@@ -3,7 +3,7 @@ package io.rapa.shooongbackend.flight.entity;
 import io.rapa.shooongbackend.common.entity.BaseEntity;
 import io.rapa.shooongbackend.flight.constant.FlightStatus;
 import io.rapa.shooongbackend.flightrecord.FlightRecords;
-import io.rapa.shooongbackend.order.Orders;
+import io.rapa.shooongbackend.order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
