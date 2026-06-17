@@ -1,5 +1,6 @@
 package io.rapa.shooongbackend.config;
 
+import io.rapa.shooongbackend.common.filter.JwtAuthenticationFilter;
 import io.rapa.shooongbackend.properties.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,12 +10,15 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Value("${custom.BASE_URL}")
     String BASE_URL;
 
@@ -33,6 +37,7 @@ public class SecurityConfig {
                             auth.anyRequest().permitAll();
                         }
                 )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

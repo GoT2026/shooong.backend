@@ -15,7 +15,7 @@ public class WayPoints {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wayPointId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String position;
 
     private Instant passedTime;

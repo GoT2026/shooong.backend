@@ -18,7 +18,7 @@ public class Flights extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private Long flightId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private FlightStatus flightStatus;
 

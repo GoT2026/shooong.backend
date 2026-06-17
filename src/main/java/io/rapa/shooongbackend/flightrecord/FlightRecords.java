@@ -24,10 +24,10 @@ public class FlightRecords {
     @Column(nullable = false)
     private Instant timeStamp;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String position;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String rotation;
 
     @Column(nullable = false)

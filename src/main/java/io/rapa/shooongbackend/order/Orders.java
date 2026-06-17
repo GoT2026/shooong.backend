@@ -35,7 +35,7 @@ public class Orders extends BaseEntity {
     @Column(nullable = true)
     private Long averageTilt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 

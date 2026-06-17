@@ -13,7 +13,7 @@ spring:
       ddl-auto: create-drop
 custom:
   BASE_URL: ${BASE_URL}
-  appKey: ${BASE_64_KEY}
+  appkey: ${BASE_64_KEY}
   validations:
     access: ${ACCESSTOKENTIME}
-    refresh: ${refreshTokenTime}
+    refresh: ${REFRESHTOKENTIME}

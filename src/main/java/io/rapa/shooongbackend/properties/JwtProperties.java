@@ -2,19 +2,21 @@ package io.rapa.shooongbackend.properties;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
-@ConfigurationProperties(value = "custom")
+@Setter
+@ConfigurationProperties(prefix = "custom")
 @RequiredArgsConstructor
 public class JwtProperties {
-    private String appKey;
+    private String appkey;
 
     private Validations validations;
 
     @Getter
-    @RequiredArgsConstructor
-    private static class Validations{
+    @Setter
+    public static class Validations{
         private Long access;
         private Long refresh;
     }
