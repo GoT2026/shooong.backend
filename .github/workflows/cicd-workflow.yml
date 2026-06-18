@@ -25,6 +25,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
+      - name: env 파일 생성
+        run: |
+          echo "DB_URL=${{ secrets.DB_URL }}" >> .env.development
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env.development
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.development
+          echo "DB_BASE_URL=${{ secrets.BASE_URL }}" >> .env.development
+          echo "REFRESHTOKENTIME=${{ secrets.REFRESHTOKENTIME }}" >> .env.development
+          echo "BASE_64_KEY=${{ secrets.BASE_64_KEY }}" >> .env.development
+          echo "ACCESSTOKENTIME=${{ secrets.ACCESSTOKENTIME }}" >> .env.development
       - name: Gradle을 통한 JAR파일 빌드
         run: ./gradlew build test
       - name: 레지스트리 로그인
