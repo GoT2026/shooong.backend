@@ -1,0 +1,16 @@
+name: for-production
+services:
+  web-server:
+    image: nginx:latest
+    container_name: asset-box-web
+    ports:
+      - "80:80"
+      - "443:443"
+  backend:
+    image: topofthehead/asset-box
+
+volumes:
+  mysql_data:
+networks:
+  assetbox:
+    driver: bridge
