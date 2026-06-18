@@ -34,6 +34,10 @@ jobs:
           echo "REFRESHTOKENTIME=${{ secrets.REFRESHTOKENTIME }}" >> .env.development
           echo "BASE_64_KEY=${{ secrets.BASE_64_KEY }}" >> .env.development
           echo "ACCESSTOKENTIME=${{ secrets.ACCESSTOKENTIME }}" >> .env.development
+      - name: env 확인
+        run: |
+          ls -al
+          cat .env.development | sed 's/=.*/=***/'
       - name: Gradle을 통한 JAR파일 빌드
         run: ./gradlew build
       - name: 레지스트리 로그인
