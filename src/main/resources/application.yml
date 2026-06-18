@@ -10,7 +10,7 @@ spring:
     name: shooong-backend
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 custom:
   BASE_URL: ${BASE_URL}
   appkey: ${BASE_64_KEY}
@@ -21,10 +21,8 @@ custom:
 springdoc:
   api-docs:
     enabled: true
-    path: /v3/api-docs # api-docs의 엔드포인트 지정 : localhost:8080/v3/api-docs
   swagger-ui:
     enabled: true
-    path: /v3/swagger-ui # swagger ui의 엔드포인트 지정
     operations-sorter: alpha # API 정렬 기준
     # alpha : 알파벳 순 API 정렬 / method : HTTP Method 순 API 정렬
     display-request-duration: true
