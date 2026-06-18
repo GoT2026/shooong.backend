@@ -116,7 +116,7 @@ class FlightControllerTest {
                         new FlightRecordVo(
                                 1L,
                                 2000L,
-                                2000L,
+                                230.324313,
                                 new PositionRequest(2.0,2.0,2.0),
                                 new RotationRequest(2.0,2.0,2.0,2.0)
                         )

@@ -1,6 +1,7 @@
 package io.rapa.shooongbackend.flight.controller;
 
 import io.rapa.shooongbackend.common.dto.ApiResult;
+import io.rapa.shooongbackend.flight.dto.FlightRecordRequest;
 import io.rapa.shooongbackend.flight.dto.StartFlightResponse;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(
         name = "Flight",
@@ -26,7 +28,37 @@ public interface FlightSwaggerSupporter {
             description = "주문을 수행하기 위해 비행을 시작하는 API",
             parameters = {
                     @Parameter(name = "orderId", description = "주문 ID")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @RequestBody(
+            content = @Content(
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                        "flightId": 1,
+                                        "samples": [
+                                            {
+                                                "sequence": 1,
+                                                "timestampUnixMs": 178175000000,
+                                                "elapsedTimeSeconds": 0.011,
+                                                "position": {
+                                                    "x": 0.0,
+                                                    "y": 1.5,
+                                                    "z": 3.0
+                                                },
+                                                "rotation": {
+                                                    "x": 0.0,
+                                                    "y": 1.5,
+                                                    "z": 3.0,
+                                                    "w": 3.0
+                                                }
+                                            }
+                                        ]
+                                    }
+                                    """
+                    )
+            )
     )
     @ApiResponse(
             responseCode = "201",
@@ -50,7 +82,35 @@ public interface FlightSwaggerSupporter {
                     )
             )
     )
-    @SecurityRequirement(name = "bearerAuth")
     ResponseEntity<ApiResult<StartFlightResponse>> startFlight(Long orderId);
+
+
+    @Operation(
+            summary = "비행 기록",
+            description = "비행을 기록하는 API",
+            parameters = {
+                    @Parameter(name = "flightId", description = "비행 ID")
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponse(
+            responseCode = "200 OK",
+            description = "비행 기록 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = @ExampleObject(
+                            """
+                            {
+                                "statusCode":"201 CREATED",
+                                "message":"비행이 기록되었습니다."
+                            }
+                            """
+                    )
+            )
+    )
+    ResponseEntity<ApiResult<Void>> recordFlight(
+            Long flightId,
+            FlightRecordRequest request
+    );
 
 }
