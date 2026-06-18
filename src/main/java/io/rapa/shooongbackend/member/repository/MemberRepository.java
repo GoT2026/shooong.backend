@@ -2,10 +2,9 @@ package io.rapa.shooongbackend.member.repository;
 
 import io.rapa.shooongbackend.common.constant.ErrorCode;
 import io.rapa.shooongbackend.common.exception.CustomException;
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.member.entity.Members;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.lang.reflect.Member;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Members, Long> {

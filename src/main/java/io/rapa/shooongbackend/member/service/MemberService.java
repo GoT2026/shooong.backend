@@ -2,7 +2,7 @@ package io.rapa.shooongbackend.member.service;
 
 import io.rapa.shooongbackend.common.constant.ErrorCode;
 import io.rapa.shooongbackend.common.util.PreConditions;
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.member.entity.Members;
 import io.rapa.shooongbackend.member.repository.MemberRepository;
 import io.rapa.shooongbackend.member.dto.UserCreateRequest;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;

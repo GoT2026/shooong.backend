@@ -2,7 +2,7 @@ package io.rapa.shooongbackend.security.service;
 
 import io.rapa.shooongbackend.common.constant.ErrorCode;
 import io.rapa.shooongbackend.common.util.PreConditions;
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.member.entity.Members;
 import io.rapa.shooongbackend.member.repository.MemberRepository;
 import io.rapa.shooongbackend.security.dto.KeyPair;
 import io.rapa.shooongbackend.security.dto.UserLoginRequest;

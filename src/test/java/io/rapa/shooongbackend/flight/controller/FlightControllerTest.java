@@ -1,25 +1,26 @@
 package io.rapa.shooongbackend.flight.controller;
 
 import io.rapa.shooongbackend.common.constant.SuccessCode;
-import io.rapa.shooongbackend.common.dto.ApiResult;
+import io.rapa.shooongbackend.flight.constant.FlightStatus;
 import io.rapa.shooongbackend.flight.dto.FlightRecordRequest;
 import io.rapa.shooongbackend.flight.dto.FlightRecordVo;
-import io.rapa.shooongbackend.flight.dto.StartFlightResponse;
 import io.rapa.shooongbackend.flight.dto.postion.PositionRequest;
 import io.rapa.shooongbackend.flight.dto.postion.RotationRequest;
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.flight.entity.Flights;
+import io.rapa.shooongbackend.flight.repository.FlightRepository;
+import io.rapa.shooongbackend.member.entity.Members;
 import io.rapa.shooongbackend.member.repository.MemberRepository;
 import io.rapa.shooongbackend.order.entity.Orders;
 import io.rapa.shooongbackend.order.repository.OrderRepository;
-import io.rapa.shooongbackend.order.service.OrderService;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
@@ -35,11 +35,11 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -67,6 +67,8 @@ class FlightControllerTest {
 
     Members testMember;
     Orders testOrder;
+    @Autowired
+    private FlightRepository flightRepository;
 
     @BeforeEach
     void setUp(){
@@ -83,8 +85,6 @@ class FlightControllerTest {
                         .member(testMember)
                         .build()
         );
-
-
     }
 
     @Test
@@ -136,5 +136,98 @@ class FlightControllerTest {
                 ).andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.message").value(SuccessCode.FLIGHT_RECORD.getDescription()));
+    }
+
+    @Test
+    void 비행_기록_실패() throws  Exception{
+        // given
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(
+                testingUserDetails,
+                null,
+                "ROLE_USER"
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Long flightId = flightController.startFlight(testOrder.getOrderId())
+                .getBody()
+                .getData().flightId();
+
+        Flights founded = flightRepository.findByIdOrThrow(flightId);
+        founded.setCrashed();
+
+        List<FlightRecordVo> lst = new ArrayList<>();
+        lst.add(
+                new FlightRecordVo(
+                        1L,
+                        2000L,
+                        230.324313,
+                        new PositionRequest(2.0,2.0,2.0),
+                        new RotationRequest(2.0,2.0,2.0,2.0)
+                )
+        );
+
+        FlightRecordRequest request = new FlightRecordRequest(
+                flightId,
+                lst
+        );
+
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(BASE_URL + "/{flightId}/record", flightId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                ).andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+    @Test
+    void 비행_충돌_발생() throws Exception {
+        // given
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(
+                testingUserDetails,
+                null,
+                "ROLE_USER"
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Long flightId = flightController.startFlight(testOrder.getOrderId())
+                .getBody()
+                .getData().flightId();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put(BASE_URL + "/{flightId}/crash", flightId)
+                ).andExpect(status().isOk())
+                .andDo(print());
+
+
+        Flights founded = flightRepository.findByIdOrThrow(flightId);
+
+        Assertions.assertThat(founded.getFlightStatus()).isEqualTo(FlightStatus.CRASHED);
+    }
+
+    @Test
+    void 비행_완료() throws Exception {
+        // given
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(
+                testingUserDetails,
+                null,
+                "ROLE_USER"
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Long flightId = flightController.startFlight(testOrder.getOrderId())
+                .getBody()
+                .getData().flightId();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put(BASE_URL + "/{flightId}/complete", flightId)
+                ).andExpect(status().isOk())
+                .andDo(print());
+
+
+        Flights founded = flightRepository.findByIdOrThrow(flightId);
+
+        Assertions.assertThat(founded.getFlightStatus()).isEqualTo(FlightStatus.FLIGHT_COMPLETE);
     }
 }

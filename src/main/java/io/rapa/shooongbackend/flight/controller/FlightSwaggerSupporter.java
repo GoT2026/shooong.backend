@@ -31,35 +31,6 @@ public interface FlightSwaggerSupporter {
             },
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @RequestBody(
-            content = @Content(
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "flightId": 1,
-                                        "samples": [
-                                            {
-                                                "sequence": 1,
-                                                "timestampUnixMs": 178175000000,
-                                                "elapsedTimeSeconds": 0.011,
-                                                "position": {
-                                                    "x": 0.0,
-                                                    "y": 1.5,
-                                                    "z": 3.0
-                                                },
-                                                "rotation": {
-                                                    "x": 0.0,
-                                                    "y": 1.5,
-                                                    "z": 3.0,
-                                                    "w": 3.0
-                                                }
-                                            }
-                                        ]
-                                    }
-                                    """
-                    )
-            )
-    )
     @ApiResponse(
             responseCode = "201",
             description = "비행 시작 성공",
@@ -93,6 +64,35 @@ public interface FlightSwaggerSupporter {
             },
             security = @SecurityRequirement(name = "bearerAuth")
     )
+    @RequestBody(
+            content = @Content(
+                    examples = @ExampleObject(
+                            value = """
+                                    {
+                                        "flightId": 1,
+                                        "samples": [
+                                            {
+                                                "sequence": 1,
+                                                "timestampUnixMs": 178175000000,
+                                                "elapsedTimeSeconds": 0.011,
+                                                "position": {
+                                                    "x": 0.0,
+                                                    "y": 1.5,
+                                                    "z": 3.0
+                                                },
+                                                "rotation": {
+                                                    "x": 0.0,
+                                                    "y": 1.5,
+                                                    "z": 3.0,
+                                                    "w": 3.0
+                                                }
+                                            }
+                                        ]
+                                    }
+                                    """
+                    )
+            )
+    )
     @ApiResponse(
             responseCode = "200 OK",
             description = "비행 기록 성공",
@@ -112,5 +112,50 @@ public interface FlightSwaggerSupporter {
             Long flightId,
             FlightRecordRequest request
     );
+
+
+    @Operation(
+            summary = "충돌 발생",
+            description = "비행 중 충돌을 설정하는 API",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponse(
+            responseCode = "200 OK",
+            description = "비행 충돌 발생",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = @ExampleObject(
+                            """
+                            {
+                                "statusCode":"200 OK",
+                                "message":"비행이 종료되었습니다."
+                            }
+                            """
+                    )
+            )
+    )
+    ResponseEntity<ApiResult<Void>> setCrashed(@PathVariable Long flightId);
+
+    @Operation(
+            summary = "비행 완료",
+            description = "비행이 완료 시 호출하는 API",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponse(
+            responseCode = "200 OK",
+            description = "비행 완료",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = @ExampleObject(
+                            """
+                            {
+                                "statusCode":"200 OK",
+                                "message":"비행이 종료되었습니다."
+                            }
+                            """
+                    )
+            )
+    )
+    ResponseEntity<ApiResult<Void>> flightComplete(@PathVariable Long flightId);
 
 }

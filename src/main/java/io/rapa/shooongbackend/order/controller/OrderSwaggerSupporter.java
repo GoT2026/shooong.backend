@@ -25,7 +25,7 @@ public interface OrderSwaggerSupporter {
 
 
     @Operation(
-            summary = "주문생성",
+            summary = "주문 생성",
             description = "계정의 주문을 생성하는 API",
             security = @SecurityRequirement(name = "bearerAuth")
     )
@@ -70,8 +70,7 @@ public interface OrderSwaggerSupporter {
                                         "totalFlightTime":null,
                                         "averageTilt":null,
                                         "orderStatus":"PROCESSING",
-                                        "remainWaypointCnt":0,
-                                        "isCrashed":false
+                                        "remainWaypointCnt":0
                                     }
                                 ]
                             }

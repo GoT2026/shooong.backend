@@ -34,6 +34,18 @@ public class FlightRecords {
     @Embedded
     private Rotation rotations;
 
+    @Embedded
+    private Coordinate coordinate;
+
+    @Column(nullable = false)
+    private Long sequence;
+
+    @Column(nullable = false)
+    private Long timestampUnixMs;
+
+    @Column(nullable = false)
+    private Double elapsedTimeSeconds;
+
     @ManyToOne
     @JoinColumn(name = "flight_id")
     private Flights flight;
@@ -43,11 +55,18 @@ public class FlightRecords {
             Instant timeStamp,
             PositionRequest positionRequest,
             RotationRequest rotationRequest,
+            Long sequence,
+            Long timestampUnixMs,
+            Double elapsedTimeSeconds,
             Flights flight
     ) {
         this.timeStamp = timeStamp;
         this.positions = Position.from(positionRequest);
         this.rotations = Rotation.from(rotationRequest);
+        this.sequence = sequence;
+        this.timestampUnixMs = timestampUnixMs;
+        this.elapsedTimeSeconds = elapsedTimeSeconds;
         this.flight = flight;
+        this.coordinate = Coordinate.from(rotations);
     }
 }

@@ -1,6 +1,6 @@
 package io.rapa.shooongbackend.security.entity;
 
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.member.entity.Members;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;

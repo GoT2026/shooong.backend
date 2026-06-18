@@ -26,5 +26,4 @@ springdoc:
     operations-sorter: alpha # API 정렬 기준
     # alpha : 알파벳 순 API 정렬 / method : HTTP Method 순 API 정렬
     display-request-duration: true
-    doc-expansion: full
     persist-authorization: true

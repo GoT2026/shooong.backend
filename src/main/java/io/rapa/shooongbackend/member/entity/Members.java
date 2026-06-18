@@ -1,4 +1,4 @@
-package io.rapa.shooongbackend.member;
+package io.rapa.shooongbackend.member.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

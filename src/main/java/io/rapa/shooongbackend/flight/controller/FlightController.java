@@ -40,4 +40,26 @@ public class FlightController implements FlightSwaggerSupporter {
             SuccessCode.FLIGHT_RECORD
         );
     }
+
+
+
+    @PutMapping("/{flightId}/crash")
+    public ResponseEntity<ApiResult<Void>> setCrashed(
+            @PathVariable Long flightId
+    ){
+            flightService.setCrashed(flightId);
+            return ApiResult.empty(
+                SuccessCode.FLIGHT_FINISHED
+            );
+    }
+
+    @PutMapping("/{flightId}/complete")
+    public ResponseEntity<ApiResult<Void>> flightComplete(
+            @PathVariable Long flightId
+    ){
+        flightService.setCompleted(flightId);
+        return ApiResult.empty(
+                SuccessCode.FLIGHT_FINISHED
+        );
+    }
 }
