@@ -33,7 +33,6 @@ public class OrderService {
         );
     }
 
-    @Transactional
     @PreAuthorize("isAuthenticated()")
     public List<OrderDetailsResponse> getOrderDetails(Long memberId){
         Members founded = memberRepository.findByIdOrThrow(memberId);
