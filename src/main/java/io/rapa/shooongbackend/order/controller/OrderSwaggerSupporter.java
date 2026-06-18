@@ -2,6 +2,7 @@ package io.rapa.shooongbackend.order.controller;
 
 
 import io.rapa.shooongbackend.common.dto.ApiResult;
+import io.rapa.shooongbackend.order.dto.OrderDetailsResponse;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,6 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+import java.util.List;
 
 @Tag(
         name = "Order",
@@ -42,4 +45,39 @@ public interface OrderSwaggerSupporter {
             )
     )
     ResponseEntity<ApiResult<Void>> createOrder(DefaultCurrentUser currentUser);
+
+
+    @Operation(
+            summary = "주문조회",
+            description = "계정의 주문을 조회하는 API",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "주문 조회 성공",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = @ExampleObject(
+                            """
+                            {
+                                "statusCode" : "200 OK",
+                                "message" : "주문이 조회되었습니다.",
+                                "data" : [
+                                    {
+                                        "orderId":2,
+                                        "rating":null,
+                                        "score":null,
+                                        "totalFlightTime":null,
+                                        "averageTilt":null,
+                                        "orderStatus":"PROCESSING",
+                                        "remainWaypointCnt":0,
+                                        "isCrashed":false
+                                    }
+                                ]
+                            }
+                            """
+                    )
+            )
+    )
+    ResponseEntity<ApiResult<List<OrderDetailsResponse>>> getOrders(DefaultCurrentUser currentUser);
 }

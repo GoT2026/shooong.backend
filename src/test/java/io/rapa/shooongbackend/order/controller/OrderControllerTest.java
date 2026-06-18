@@ -3,6 +3,7 @@ package io.rapa.shooongbackend.order.controller;
 import io.rapa.shooongbackend.common.constant.SuccessCode;
 import io.rapa.shooongbackend.member.Members;
 import io.rapa.shooongbackend.member.repository.MemberRepository;
+import io.rapa.shooongbackend.order.service.OrderService;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,8 @@ class OrderControllerTest {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
+    OrderService orderService;
+    @Autowired
     MemberRepository memberRepository;
     @Autowired
     ObjectMapper objectMapper;
@@ -45,16 +48,18 @@ class OrderControllerTest {
 
     UserDetails testingUserDetails;
 
+    Members testMember;
+
     @BeforeEach
     void setUp(){
-        Members saved = memberRepository.save(
+        testMember = memberRepository.save(
                 Members.builder()
                         .name("이정수")
                         .loginId(TEST_USER_ID)
                         .password(passwordEncoder.encode(TEST_USER_PW))
                         .build()
         );
-        testingUserDetails = DefaultCurrentUser.from(saved);
+        testingUserDetails = DefaultCurrentUser.from(testMember);
     }
 
     @Test
@@ -67,4 +72,22 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.message").value(SuccessCode.ORDER_CREATE_SUCCESS.getDescription()));
     }
 
+    @Test
+    void 주문_조회_성공() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(
+                new TestingAuthenticationToken(
+                testingUserDetails,
+                null,
+                "ROLE_USER"
+        )
+        );
+
+        orderService.createOrder(testMember.getMemberId());
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get(BASE_URL)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.message").value(SuccessCode.ORDER_RETRIEVE_SUCCESS.getDescription()));
+    }
 }

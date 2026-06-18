@@ -9,11 +9,13 @@ import io.rapa.shooongbackend.waypoint.entity.WayPoints;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Orders extends BaseEntity {
@@ -33,11 +35,13 @@ public class Orders extends BaseEntity {
     private Long totalFlightTime;
 
     @Column(nullable = true)
-    private Long averageTilt;
+    private Double averageTilt;
 
     @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    private Integer remainWaypointCnt;
 
     @Column(nullable = false)
     private Boolean isCrashed;
@@ -62,6 +66,7 @@ public class Orders extends BaseEntity {
         this.member = member;
         this.isCrashed = false;
         this.orderStatus = OrderStatus.PROCESSING;
+        this.remainWaypointCnt = 0;
         member.addOrder(this);
     }
 
@@ -71,5 +76,6 @@ public class Orders extends BaseEntity {
 
     public void addWayPoint(WayPoints wayPoint){
         this.wayPoints.add(wayPoint);
+        remainWaypointCnt++;
     }
 }

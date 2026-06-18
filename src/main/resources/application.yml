@@ -10,7 +10,7 @@ spring:
     name: shooong-backend
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 custom:
   BASE_URL: ${BASE_URL}
   appkey: ${BASE_64_KEY}
