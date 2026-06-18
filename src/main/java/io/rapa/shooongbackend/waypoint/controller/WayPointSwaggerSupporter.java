@@ -2,7 +2,6 @@ package io.rapa.shooongbackend.waypoint.controller;
 
 import io.rapa.shooongbackend.common.dto.ApiResult;
 import io.rapa.shooongbackend.waypoint.dto.WayPointCreateRequest;
-import io.rapa.shooongbackend.waypoint.entity.WayPoints;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,10 +10,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -79,10 +76,16 @@ public interface WayPointSwaggerSupporter {
                             """
                             {
                                 "statusCode":"200 OK",
-                                "message":"체크포인트가 통과되었습니다.",
+                                "message":"체크포인트가 조회되었습니다.",
                                 "data": [
                                     {
-                                        ""
+                                        "wayPointId": 1,
+                                        "position": {
+                                            "posX": 0.1,
+                                            "posY": 0.2,
+                                            "posZ": 0.3
+                                        },
+                                        "passedTime": null
                                     }
                                 ]
                             }
@@ -109,18 +112,7 @@ public interface WayPointSwaggerSupporter {
                             """
                             {
                               "statusCode": "200 OK",
-                              "message": "체크포인트가 조회되었습니다.",
-                              "data": [
-                                {
-                                  "wayPointId": 1,
-                                  "position": {
-                                    "posX": 0.1,
-                                    "posY": 0.2,
-                                    "posZ": 0.3
-                                  },
-                                  "passedTime": null
-                                }
-                              ]
+                              "message": "체크포인트가 통과되었습니다."
                             }
                             """
                     )

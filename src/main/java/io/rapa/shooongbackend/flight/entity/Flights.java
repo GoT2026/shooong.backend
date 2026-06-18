@@ -70,8 +70,8 @@ public class Flights {
     public void calculateTotalTime(){
         if(recordList.size() <= 0) order.setTotalFlightTime(0L);
         else order.setTotalFlightTime(
-                recordList.get(recordList.size() - 1).getTimestampUnixMs()
-                        - recordList.get(0).getTimestampUnixMs() / 1000
+                (recordList.get(recordList.size() - 1).getTimestampUnixMs()
+                        - recordList.get(0).getTimestampUnixMs()) / 1000
         );
     }
 

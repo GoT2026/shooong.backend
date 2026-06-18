@@ -130,12 +130,71 @@ class FlightControllerTest {
         String json = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post(BASE_URL + "/{flightId}/record", flightId)
+                        MockMvcRequestBuilders.post(BASE_URL + "/record")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 ).andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.message").value(SuccessCode.FLIGHT_RECORD.getDescription()));
+    }
+
+    @Test
+    void 비행_리플레이_조회() throws Exception {
+        // given
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(
+                testingUserDetails,
+                null,
+                "ROLE_USER"
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Long flightId = flightController.startFlight(testOrder.getOrderId())
+                .getBody()
+                .getData().flightId();
+
+        List<FlightRecordVo> lst = new ArrayList<>();
+        lst.add(
+                new FlightRecordVo(
+                        1L,
+                        2000L,
+                        0.1,
+                        new PositionRequest(2.0, 3.0, 4.0),
+                        new RotationRequest(0.0, 0.0, 0.0, 1.0)
+                )
+        );
+        lst.add(
+                new FlightRecordVo(
+                        2L,
+                        2100L,
+                        0.2,
+                        new PositionRequest(5.0, 6.0, 7.0),
+                        new RotationRequest(0.0, 0.1, 0.0, 1.0)
+                )
+        );
+
+        FlightRecordRequest request = new FlightRecordRequest(
+                flightId,
+                lst
+        );
+
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(BASE_URL + "/record")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        ).andExpect(status().isOk());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get(BASE_URL + "/{flightId}/replay", flightId)
+        ).andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.message").value(SuccessCode.FLIGHT_REPLAY_RETRIEVE.getDescription()))
+                .andExpect(jsonPath("$.data.flightId").value(flightId))
+                .andExpect(jsonPath("$.data.orderId").value(testOrder.getOrderId()))
+                .andExpect(jsonPath("$.data.samples[0].sequence").value(1))
+                .andExpect(jsonPath("$.data.samples[0].position.x").value(2.0))
+                .andExpect(jsonPath("$.data.samples[1].sequence").value(2));
     }
 
     @Test
@@ -174,7 +233,7 @@ class FlightControllerTest {
         String json = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post(BASE_URL + "/{flightId}/record", flightId)
+                        MockMvcRequestBuilders.post(BASE_URL + "/record")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 ).andExpect(status().is4xxClientError())
@@ -223,11 +282,114 @@ class FlightControllerTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.put(BASE_URL + "/{flightId}/complete", flightId)
                 ).andExpect(status().isOk())
-                .andDo(print());
+                .andDo(print())
+                .andExpect(jsonPath("$.message").value(SuccessCode.FLIGHT_FINISHED.getDescription()))
+                .andExpect(jsonPath("$.data.rank").value(1))
+                .andExpect(jsonPath("$.data.orderId").value(testOrder.getOrderId()))
+                .andExpect(jsonPath("$.data.flightId").value(flightId))
+                .andExpect(jsonPath("$.data.angleScore").value(50.0))
+                .andExpect(jsonPath("$.data.timeScore").value(50.0))
+                .andExpect(jsonPath("$.data.totalScore").value(100.0))
+                .andExpect(jsonPath("$.data.totalFlightTime").value(0))
+                .andExpect(jsonPath("$.data.averageTilt").value(0.0))
+                .andExpect(jsonPath("$.data.orderStatus").value("COMPLETED"));
 
 
         Flights founded = flightRepository.findByIdOrThrow(flightId);
 
         Assertions.assertThat(founded.getFlightStatus()).isEqualTo(FlightStatus.FLIGHT_COMPLETE);
+        Assertions.assertThat(testOrder.getRating()).isEqualTo(1);
+        Assertions.assertThat(testOrder.getScore()).isEqualTo(100.0);
+        Assertions.assertThat(testOrder.getTotalFlightTime()).isEqualTo(0L);
+        Assertions.assertThat(testOrder.getAverageTilt()).isEqualTo(0.0);
+    }
+
+    @Test
+    void 이분_비행_시뮬레이션_점수_계산() throws Exception {
+        // given
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(
+                testingUserDetails,
+                null,
+                "ROLE_USER"
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Long flightId = flightController.startFlight(testOrder.getOrderId())
+                .getBody()
+                .getData().flightId();
+
+        RotationRequest rotation = eulerToQuaternion(
+                6.0,
+                4.0,
+                0.0
+        );
+
+        List<FlightRecordVo> records = new ArrayList<>();
+        for (int i = 0; i <= 240; i++) {
+            double elapsedTimeSeconds = i * 0.5;
+            records.add(
+                    new FlightRecordVo(
+                            (long) i + 1,
+                            1_000_000L + Math.round(elapsedTimeSeconds * 1000),
+                            elapsedTimeSeconds,
+                            new PositionRequest(
+                                    elapsedTimeSeconds,
+                                    20.0,
+                                    elapsedTimeSeconds * 2
+                            ),
+                            rotation
+                    )
+            );
+        }
+
+        FlightRecordRequest request = new FlightRecordRequest(
+                flightId,
+                records
+        );
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(BASE_URL + "/record")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        ).andExpect(status().isOk());
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put(BASE_URL + "/{flightId}/complete", flightId)
+        ).andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.data.angleScore").value(45.0))
+                .andExpect(jsonPath("$.data.timeScore").value(26.0))
+                .andExpect(jsonPath("$.data.totalScore").value(71.0))
+                .andExpect(jsonPath("$.data.totalFlightTime").value(120))
+                .andExpect(jsonPath("$.data.averageTilt").value(5.0));
+
+        Assertions.assertThat(testOrder.getRating()).isEqualTo(1);
+        Assertions.assertThat(testOrder.getScore()).isEqualTo(71.0);
+        Assertions.assertThat(testOrder.getTotalFlightTime()).isEqualTo(120L);
+        Assertions.assertThat(testOrder.getAverageTilt()).isEqualTo(5.0);
+    }
+
+    private RotationRequest eulerToQuaternion(
+            double rollDegrees,
+            double pitchDegrees,
+            double yawDegrees
+    ) {
+        double roll = Math.toRadians(rollDegrees);
+        double pitch = Math.toRadians(pitchDegrees);
+        double yaw = Math.toRadians(yawDegrees);
+
+        double cy = Math.cos(yaw * 0.5);
+        double sy = Math.sin(yaw * 0.5);
+        double cp = Math.cos(pitch * 0.5);
+        double sp = Math.sin(pitch * 0.5);
+        double cr = Math.cos(roll * 0.5);
+        double sr = Math.sin(roll * 0.5);
+
+        return new RotationRequest(
+                sr * cp * cy - cr * sp * sy,
+                cr * sp * cy + sr * cp * sy,
+                cr * cp * sy - sr * sp * cy,
+                cr * cp * cy + sr * sp * sy
+        );
     }
 }

@@ -23,7 +23,11 @@ public enum SuccessCode {
     // 비행
     FLIGHT_START(HttpStatus.CREATED, "비행이 시작되었습니다."),
     FLIGHT_RECORD(HttpStatus.OK, "비행이 기록되었습니다."),
+    FLIGHT_REPLAY_RETRIEVE(HttpStatus.OK, "비행 리플레이가 조회되었습니다."),
     FLIGHT_FINISHED(HttpStatus.OK, "비행이 종료되었습니다."),
+
+    // 랭킹
+    RANKING_RETRIEVE(HttpStatus.OK, "랭킹이 조회되었습니다."),
     ;
 
 

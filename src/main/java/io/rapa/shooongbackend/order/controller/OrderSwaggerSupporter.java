@@ -5,15 +5,14 @@ import io.rapa.shooongbackend.common.dto.ApiResult;
 import io.rapa.shooongbackend.order.dto.OrderDetailsResponse;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public interface OrderSwaggerSupporter {
                     )
             )
     )
-    ResponseEntity<ApiResult<Void>> createOrder(DefaultCurrentUser currentUser);
+    ResponseEntity<ApiResult<Void>> createOrder(@Parameter(hidden = true) DefaultCurrentUser currentUser);
 
 
     @Operation(
@@ -78,5 +77,5 @@ public interface OrderSwaggerSupporter {
                     )
             )
     )
-    ResponseEntity<ApiResult<List<OrderDetailsResponse>>> getOrders(DefaultCurrentUser currentUser);
+    ResponseEntity<ApiResult<List<OrderDetailsResponse>>> getOrders(@Parameter(hidden = true) DefaultCurrentUser currentUser);
 }

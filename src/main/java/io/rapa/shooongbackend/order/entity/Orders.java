@@ -70,6 +70,21 @@ public class Orders extends BaseEntity {
         this.totalFlightTime = totalFlightTime;
     }
 
+    public void updateLeaderboardScore(
+            Double score,
+            Long totalFlightTime,
+            Double averageTilt
+    ) {
+        this.score = score;
+        this.totalFlightTime = totalFlightTime;
+        this.averageTilt = averageTilt;
+        this.orderStatus = OrderStatus.COMPLETED;
+    }
+
+    public void updateRating(Long rating) {
+        this.rating = rating;
+    }
+
     public void deductWayPointCnt(){
         this.remainWaypointCnt--;
     }
