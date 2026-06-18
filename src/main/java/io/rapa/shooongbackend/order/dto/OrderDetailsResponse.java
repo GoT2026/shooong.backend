@@ -11,8 +11,7 @@ public record OrderDetailsResponse(
     Long totalFlightTime,
     Double averageTilt,
     String orderStatus,
-    Integer remainWaypointCnt,
-    Boolean isCrashed
+    Integer remainWaypointCnt
 ) {
     public static OrderDetailsResponse from(Orders orders){
         return OrderDetailsResponse.builder()
@@ -23,7 +22,6 @@ public record OrderDetailsResponse(
                 .averageTilt(orders.getAverageTilt())
                 .orderStatus(orders.getOrderStatus().name())
                 .remainWaypointCnt(orders.getRemainWaypointCnt())
-                .isCrashed(orders.getIsCrashed())
                 .build();
     }
 }

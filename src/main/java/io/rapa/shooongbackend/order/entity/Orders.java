@@ -3,7 +3,7 @@ package io.rapa.shooongbackend.order.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.rapa.shooongbackend.common.entity.BaseEntity;
 import io.rapa.shooongbackend.flight.entity.Flights;
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.member.entity.Members;
 import io.rapa.shooongbackend.order.constant.OrderStatus;
 import io.rapa.shooongbackend.waypoint.entity.WayPoints;
 import jakarta.persistence.*;
@@ -43,9 +43,6 @@ public class Orders extends BaseEntity {
 
     private Integer remainWaypointCnt;
 
-    @Column(nullable = false)
-    private Boolean isCrashed;
-
     @ManyToOne
     @JoinColumn(
             name = "member_id",
@@ -64,10 +61,32 @@ public class Orders extends BaseEntity {
             Members member
     ){
         this.member = member;
-        this.isCrashed = false;
         this.orderStatus = OrderStatus.PROCESSING;
         this.remainWaypointCnt = 0;
         member.addOrder(this);
+    }
+
+    public void setTotalFlightTime(Long totalFlightTime) {
+        this.totalFlightTime = totalFlightTime;
+    }
+
+    public void updateLeaderboardScore(
+            Double score,
+            Long totalFlightTime,
+            Double averageTilt
+    ) {
+        this.score = score;
+        this.totalFlightTime = totalFlightTime;
+        this.averageTilt = averageTilt;
+        this.orderStatus = OrderStatus.COMPLETED;
+    }
+
+    public void updateRating(Long rating) {
+        this.rating = rating;
+    }
+
+    public void deductWayPointCnt(){
+        this.remainWaypointCnt--;
     }
 
     public void addFlight(Flights flight){

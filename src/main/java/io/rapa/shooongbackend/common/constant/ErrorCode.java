@@ -15,13 +15,18 @@ public enum ErrorCode {
     // 주문
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 주문을 찾을 수 없습니다."),
 
+    // Way Point
+    WAY_POINT_NOT_FOUND(HttpStatus.NOT_FOUND, "체크포인트를 찾을 수 없습니다."),
 
+
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 문제가 발생했습니다."),
+    CAN_NOT_CALCULATE(HttpStatus.BAD_REQUEST, "비행중에 시간을 측정할 수 없습니다."),
 
     // 비행
     ORDER_NOT_VALID(HttpStatus.BAD_REQUEST, "인증된 사용자가 주문자가 아닙니다."),
     ALREADY_ASSIGNED_ORDER(HttpStatus.BAD_REQUEST, "이미 드론이 배정된 주문입니다."),
     FLIGHT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 비행편을 찾을 수 없습니다."),
-
+    CAN_NOT_RECORD(HttpStatus.BAD_REQUEST, "더 이상 기록할 수 없는 상태의 비행입니다."),
 
     // 토큰
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED,"만료된 토큰입니다."),

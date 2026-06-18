@@ -1,6 +1,6 @@
 package io.rapa.shooongbackend.order.service;
 
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.member.entity.Members;
 import io.rapa.shooongbackend.member.repository.MemberRepository;
 import io.rapa.shooongbackend.order.dto.OrderDetailsResponse;
 import io.rapa.shooongbackend.order.entity.Orders;
@@ -41,5 +41,6 @@ public class OrderService {
                 .map((order)-> OrderDetailsResponse.from(order))
                 .toList();
     }
+
 
 }

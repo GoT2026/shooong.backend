@@ -1,13 +1,17 @@
 package io.rapa.shooongbackend.waypoint.entity;
 
+import io.rapa.shooongbackend.flight.dto.postion.PositionRequest;
+import io.rapa.shooongbackend.flightrecord.entity.Position;
 import io.rapa.shooongbackend.order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WayPoints {
@@ -15,8 +19,8 @@ public class WayPoints {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long wayPointId;
 
-    @Column(nullable = false, length = 255)
-    private String position;
+    @Embedded
+    private Position position;
 
     private Instant passedTime;
 
@@ -26,11 +30,15 @@ public class WayPoints {
 
     @Builder
     public WayPoints(
-            String position,
+            PositionRequest position,
             Orders order
     ){
-        this.position = position;
+        this.position = Position.from(position);
         this.order = order;
         order.addWayPoint(this);
+    }
+
+    public void passed(){
+        this.passedTime = Instant.now();
     }
 }

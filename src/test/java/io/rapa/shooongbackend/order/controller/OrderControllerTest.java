@@ -1,7 +1,7 @@
 package io.rapa.shooongbackend.order.controller;
 
 import io.rapa.shooongbackend.common.constant.SuccessCode;
-import io.rapa.shooongbackend.member.Members;
+import io.rapa.shooongbackend.member.entity.Members;
 import io.rapa.shooongbackend.member.repository.MemberRepository;
 import io.rapa.shooongbackend.order.service.OrderService;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;
@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
