@@ -12,10 +12,13 @@ public enum SuccessCode {
     USER_CREATE_SUCCESS(HttpStatus.CREATED, "회원가입이 성공되었습니다."),
 
 
+
     // 주문
     ORDER_CREATE_SUCCESS(HttpStatus.CREATED, "주문이 생성되었습니다."),
-    ORDER_RETRIEVE_SUCCESS(HttpStatus.OK, "주문이 조회되었습니다.")
+    ORDER_RETRIEVE_SUCCESS(HttpStatus.OK, "주문이 조회되었습니다."),
 
+    // 비행
+    FLIGHT_START(HttpStatus.CREATED, "비행이 시작되었습니다."),
     ;
 
 

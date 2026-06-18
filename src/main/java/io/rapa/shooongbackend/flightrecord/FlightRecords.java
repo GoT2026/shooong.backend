@@ -30,18 +30,6 @@ public class FlightRecords {
     @Column(nullable = false, length = 255)
     private String rotation;
 
-    @Column(nullable = false)
-    private Double velocity;
-
-    @Column(nullable = false)
-    private Double pitch;
-
-    @Column(nullable = false)
-    private Double roll;
-
-    @Column(nullable = false)
-    private Double yaw;
-
     @ManyToOne
     @JoinColumn(name = "flight_id")
     private Flights flight;
@@ -51,19 +39,11 @@ public class FlightRecords {
             Instant timeStamp,
             String position,
             String rotation,
-            Double velocity,
-            Double pitch,
-            Double roll,
-            Double yaw,
             Flights flight
     ) {
         this.timeStamp = timeStamp;
         this.position = position;
         this.rotation = rotation;
-        this.velocity = velocity;
-        this.pitch = pitch;
-        this.roll = roll;
-        this.yaw = yaw;
         this.flight = flight;
         flight.addFlightRecord(this);
     }
