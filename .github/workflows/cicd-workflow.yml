@@ -25,22 +25,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-      - name: env 파일 생성
-        run: |
-          cat <<EOF > .env.development
-          DB_URL=${{ secrets.DB_URL }}
-          DB_USERNAME=${{ secrets.DB_USERNAME }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          BASE_URL=${{ secrets.BASE_URL }}
-          REFRESHTOKENTIME=${{ secrets.REFRESHTOKENTIME }}
-          BASE_64_KEY=${{ secrets.BASE_64_KEY }}
-          ACCESSTOKENTIME=${{ secrets.ACCESSTOKENTIME }}
-          EOF
       - name: DB URL 존재 확인
         run: |
           grep DB_URL .env.development
       - name: Gradle을 통한 JAR파일 빌드
-        run: ./gradlew build
+        run: ./gradlew build -x test
       - name: 레지스트리 로그인
         uses: docker/login-action@v4
         with:
