@@ -4,10 +4,12 @@ import io.rapa.shooongbackend.common.dto.ApiResult;
 import io.rapa.shooongbackend.flight.dto.StartFlightResponse;
 import io.rapa.shooongbackend.security.entity.DefaultCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +23,14 @@ public interface FlightSwaggerSupporter {
 
     @Operation(
             summary = "비행 시작",
-            description = "비행을 시작하는 API"
+            description = "주문을 수행하기 위해 비행을 시작하는 API",
+            parameters = {
+                    @Parameter(name = "orderId", description = "주문 ID")
+            }
     )
     @ApiResponse(
             responseCode = "201",
-            description = "회원가입 성공",
+            description = "비행 시작 성공",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     examples = @ExampleObject(
@@ -45,9 +50,7 @@ public interface FlightSwaggerSupporter {
                     )
             )
     )
-    ResponseEntity<ApiResult<StartFlightResponse>> startFlight(
-            DefaultCurrentUser currentUser,
-            Long orderId
-    );
+    @SecurityRequirement(name = "bearerAuth")
+    ResponseEntity<ApiResult<StartFlightResponse>> startFlight(Long orderId);
 
 }

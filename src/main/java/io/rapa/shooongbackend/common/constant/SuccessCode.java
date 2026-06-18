@@ -19,6 +19,7 @@ public enum SuccessCode {
 
     // 비행
     FLIGHT_START(HttpStatus.CREATED, "비행이 시작되었습니다."),
+    FLIGHT_RECORD(HttpStatus.OK, "비행이 기록되었습니다.")
     ;
 
 

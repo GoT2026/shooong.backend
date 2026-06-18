@@ -1,8 +1,7 @@
 package io.rapa.shooongbackend.flight.entity;
 
-import io.rapa.shooongbackend.common.entity.BaseEntity;
 import io.rapa.shooongbackend.flight.constant.FlightStatus;
-import io.rapa.shooongbackend.flightrecord.FlightRecords;
+import io.rapa.shooongbackend.flightrecord.entity.FlightRecords;
 import io.rapa.shooongbackend.order.entity.Orders;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,7 +30,7 @@ public class Flights {
     private Orders order;
 
     @OneToMany(mappedBy = "flight")
-    private List<FlightRecords> recordList;
+    private List<FlightRecords> recordList = new ArrayList<>();
 
     @Column(nullable = false)
     private Instant startedAt;

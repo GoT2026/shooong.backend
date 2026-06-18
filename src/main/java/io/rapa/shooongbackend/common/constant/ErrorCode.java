@@ -20,6 +20,7 @@ public enum ErrorCode {
     // 비행
     ORDER_NOT_VALID(HttpStatus.BAD_REQUEST, "인증된 사용자가 주문자가 아닙니다."),
     ALREADY_ASSIGNED_ORDER(HttpStatus.BAD_REQUEST, "이미 드론이 배정된 주문입니다."),
+    FLIGHT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 비행편을 찾을 수 없습니다."),
 
 
     // 토큰
