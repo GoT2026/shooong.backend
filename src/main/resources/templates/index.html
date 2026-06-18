@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shooong Leaderboard</title>
+    <link rel="stylesheet" th:href="@{/css/leaderboard.css}">
+</head>
+<body>
+<main class="app-shell">
+    <section class="content">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Shooong · VR Drone Training</p>
+                <h1>비행 결과와 전체 랭킹</h1>
+            </div>
+            <form class="actions" method="get" th:action="@{/leaderboard}">
+                <label class="limit-control">
+                    표시 개수
+                    <input name="limit" type="number" min="1" max="100" th:value="${limit}">
+                </label>
+                <button type="submit">새로고침</button>
+            </form>
+        </header>
+
+        <section class="status-banner success" th:if="${!#lists.isEmpty(rankings)}">
+            리더보드를 불러왔습니다.
+        </section>
+        <section class="status-banner" th:if="${#lists.isEmpty(rankings)}">
+            아직 표시할 랭킹 데이터가 없습니다.
+        </section>
+
+        <section class="result-section" th:if="${latestResult != null}">
+            <div>
+                <p class="eyebrow">Latest Result</p>
+                <h3>최근 비행 결과</h3>
+            </div>
+            <div class="result-grid">
+                <article>
+                    <span>전체 등수</span>
+                    <strong th:text="|${latestResult.rank()}위|">-</strong>
+                </article>
+                <article>
+                    <span>최종 점수</span>
+                    <strong th:text="${#numbers.formatDecimal(latestResult.totalScore(), 1, 1)}">-</strong>
+                </article>
+                <article>
+                    <span>각도 점수</span>
+                    <strong th:text="${#numbers.formatDecimal(latestResult.angleScore(), 1, 1)}">-</strong>
+                </article>
+                <article>
+                    <span>시간 점수</span>
+                    <strong th:text="${#numbers.formatDecimal(latestResult.timeScore(), 1, 1)}">-</strong>
+                </article>
+                <article>
+                    <span>총 비행시간</span>
+                    <strong th:text="|${latestResult.totalFlightTime()}초|">-</strong>
+                </article>
+                <article>
+                    <span>평균 기울기</span>
+                    <strong th:text="|${#numbers.formatDecimal(latestResult.averageTilt(), 1, 2)}도|">-</strong>
+                </article>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="table-header">
+                <div>
+                    <p class="eyebrow">Global Ranking</p>
+                    <h3>리더보드</h3>
+                </div>
+                <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}">-</span>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>등수</th>
+                        <th>이름</th>
+                        <th>최종 점수</th>
+                        <th>각도 점수</th>
+                        <th>시간 점수</th>
+                        <th>비행시간</th>
+                        <th>평균 기울기</th>
+                        <th>상태</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(rankings)}">
+                        <td colspan="8" class="empty-cell">랭킹 데이터가 없습니다.</td>
+                    </tr>
+                    <tr th:each="ranking : ${rankings}">
+                        <td><span class="rank-badge" th:text="${ranking.rank()}">1</span></td>
+                        <td th:text="${ranking.userName()}">pilot</td>
+                        <td class="score" th:text="${#numbers.formatDecimal(ranking.totalScore(), 1, 1)}">0</td>
+                        <td th:text="${#numbers.formatDecimal(ranking.angleScore(), 1, 1)}">0</td>
+                        <td th:text="${#numbers.formatDecimal(ranking.timeScore(), 1, 1)}">0</td>
+                        <td th:text="|${ranking.totalFlightTime()}초|">0초</td>
+                        <td th:text="|${#numbers.formatDecimal(ranking.averageTilt(), 1, 2)}도|">0도</td>
+                        <td th:text="${ranking.orderStatus()}">COMPLETED</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>
