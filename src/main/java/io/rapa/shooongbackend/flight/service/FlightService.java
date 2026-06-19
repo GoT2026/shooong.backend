@@ -113,6 +113,7 @@ public class FlightService {
                         .timeStamp(Instant.ofEpochMilli(record.timestampUnixMs()))
                         .positionRequest(record.position())
                         .rotationRequest(record.rotation())
+                        .checkpointRequest(record.checkpoint())
                         .sequence(record.sequence())
                         .timestampUnixMs(record.timestampUnixMs())
                         .elapsedTimeSeconds(record.elapsedTimeSeconds())
@@ -143,7 +144,8 @@ public class FlightService {
                                 record.getRotations().getRotY(),
                                 record.getRotations().getRotZ(),
                                 record.getRotations().getRotW()
-                        )
+                        ),
+                        record.getCheckpoint().toRequest()
                 ))
                 .toList();
 

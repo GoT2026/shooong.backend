@@ -17,13 +17,16 @@ public record RankingResponse(
         String orderStatus
 ) {
     public static RankingResponse of(Long rank, Orders order) {
+        double angleScore = LeaderboardScores.angleScore(order.getAverageTilt());
+        double timeScore = LeaderboardScores.timeScore(order.getTotalFlightTime());
+
         return RankingResponse.builder()
                 .rank(rank)
                 .orderId(order.getOrderId())
                 .userName(order.getMember().getName())
-                .angleScore(LeaderboardScores.angleScore(order.getAverageTilt()))
-                .timeScore(LeaderboardScores.timeScore(order.getTotalFlightTime()))
-                .totalScore(order.getScore())
+                .angleScore(angleScore)
+                .timeScore(timeScore)
+                .totalScore(angleScore + timeScore)
                 .totalFlightTime(order.getTotalFlightTime())
                 .averageTilt(order.getAverageTilt())
                 .orderStatus(order.getOrderStatus().name())

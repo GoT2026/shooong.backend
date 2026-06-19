@@ -26,6 +26,6 @@ public class LeaderboardViewController {
         model.addAttribute("latestResult", rankings.isEmpty() ? null : rankings.get(0));
         model.addAttribute("limit", limit == null ? 10 : limit);
 
-        return "index";
+        return "leaderboard";
     }
 }

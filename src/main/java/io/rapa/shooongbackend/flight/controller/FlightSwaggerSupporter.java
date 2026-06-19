@@ -83,6 +83,19 @@ public interface FlightSwaggerSupporter {
                                                     "y": 1.5,
                                                     "z": 3.0,
                                                     "w": 3.0
+                                                },
+                                                "checkpoint": {
+                                                    "targetCheckpointIndex": 3,
+                                                    "totalCheckpointCount": 8,
+                                                    "targetCheckpointName": "Checkpoint_03",
+                                                    "targetCheckpointStatus": "TARGET",
+                                                    "isFinalCheckpoint": false,
+                                                    "distanceToTarget": 42.5,
+                                                    "targetCheckpointPosition": {
+                                                        "x": 120.0,
+                                                        "y": 10.0,
+                                                        "z": 220.0
+                                                    }
                                                 }
                                             }
                                         ]
