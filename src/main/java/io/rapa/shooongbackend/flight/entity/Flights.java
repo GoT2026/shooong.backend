@@ -32,7 +32,7 @@ public class Flights {
     @JoinColumn(name = "order_id")
     private Orders order;
 
-    @Column(nullable = false)
+    @Column(name = "is_crashed", nullable = false)
     private Boolean isCrashed;
 
     @OneToMany(mappedBy = "flight")
