@@ -1,6 +1,7 @@
 package io.rapa.shooongbackend.flightrecord.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.rapa.shooongbackend.flight.dto.checkpoint.CheckPointRequest;
 import io.rapa.shooongbackend.flight.dto.postion.PositionRequest;
 import io.rapa.shooongbackend.flight.dto.postion.RotationRequest;
 import io.rapa.shooongbackend.flight.entity.Flights;
@@ -37,6 +38,9 @@ public class FlightRecords {
     @Embedded
     private Coordinate coordinate;
 
+    @Embedded
+    private FlightRecordCheckpoint checkpoint;
+
     @Column(nullable = false)
     private Long sequence;
 
@@ -55,6 +59,7 @@ public class FlightRecords {
             Instant timeStamp,
             PositionRequest positionRequest,
             RotationRequest rotationRequest,
+            CheckPointRequest checkpointRequest,
             Long sequence,
             Long timestampUnixMs,
             Double elapsedTimeSeconds,
@@ -68,5 +73,6 @@ public class FlightRecords {
         this.elapsedTimeSeconds = elapsedTimeSeconds;
         this.flight = flight;
         this.coordinate = Coordinate.from(rotations);
+        this.checkpoint = FlightRecordCheckpoint.from(checkpointRequest);
     }
 }

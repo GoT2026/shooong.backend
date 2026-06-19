@@ -7,3 +7,7 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
+shooong:
+  demo-data:
+    enabled: false

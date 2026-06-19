@@ -139,6 +139,58 @@ class FlightControllerTest {
     }
 
     @Test
+    void 비행_기록_checkpoint_입력_역직렬화() throws Exception {
+        String json = """
+                {
+                  "flightId": 7,
+                  "samples": [
+                    {
+                      "sequence": 1,
+                      "timestampUnixMs": 178175000000,
+                      "elapsedTimeSeconds": 0.011,
+                      "position": {
+                        "x": 0,
+                        "y": 1.5,
+                        "z": 3
+                      },
+                      "rotation": {
+                        "x": 0,
+                        "y": 1.5,
+                        "z": 3,
+                        "w": 3
+                      },
+                      "checkpoint": {
+                        "targetCheckpointIndex": 3,
+                        "totalCheckpointCount": 8,
+                        "targetCheckpointName": "Checkpoint_03",
+                        "targetCheckpointStatus": "TARGET",
+                        "isFinalCheckpoint": false,
+                        "distanceToTarget": 42.5,
+                        "targetCheckpointPosition": {
+                          "x": 120,
+                          "y": 10,
+                          "z": 220
+                        }
+                      }
+                    }
+                  ]
+                }
+                """;
+
+        FlightRecordRequest request = objectMapper.readValue(json, FlightRecordRequest.class);
+
+        Assertions.assertThat(request.flightId()).isEqualTo(7L);
+        Assertions.assertThat(request.samples().get(0).checkpoint()).isNotNull();
+        Assertions.assertThat(request.samples().get(0).checkpoint().targetCheckpointIndex()).isEqualTo(3);
+        Assertions.assertThat(request.samples().get(0).checkpoint().totalCheckpointCount()).isEqualTo(8);
+        Assertions.assertThat(request.samples().get(0).checkpoint().targetCheckpointName()).isEqualTo("Checkpoint_03");
+        Assertions.assertThat(request.samples().get(0).checkpoint().targetCheckpointStatus()).isEqualTo("TARGET");
+        Assertions.assertThat(request.samples().get(0).checkpoint().isFinalCheckpoint()).isFalse();
+        Assertions.assertThat(request.samples().get(0).checkpoint().distanceToTarget()).isEqualTo(42.5);
+        Assertions.assertThat(request.samples().get(0).checkpoint().targetCheckpointPosition().x()).isEqualTo(120.0);
+    }
+
+    @Test
     void 비행_리플레이_조회() throws Exception {
         // given
         TestingAuthenticationToken authentication = new TestingAuthenticationToken(
